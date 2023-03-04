@@ -1,28 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AdapterDll;
+using System.IO;
+using System;
 using System.Windows;
+using System.Reflection;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Linq;
 
-namespace Source
+namespace Source;
+
+
+public partial class MainWindow : Window
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+
+        LoadDlls();
     }
+
+    public void LoadDlls()
+    {
+        var path = Path.Combine(Environment.CurrentDirectory, "ext");
+
+        if (!Directory.Exists(path))
+            return;
+
+        var dlls = Directory.EnumerateFiles(path, "*.dll");
+
+
+        foreach (var dll in dlls)
+        {
+            try
+            {
+                var asm = Assembly.LoadFrom(dll);
+
+                var types = asm.GetTypes();
+
+                var module = types.FirstOrDefault(type => typeof(IFunctionModule).IsAssignableFrom(type));
+
+                if (module == null) 
+                    return;
+
+                var moduleObject = Activator.CreateInstance(module) as IFunctionModule;
+                
+                var stringEditor = moduleObject?.GetStringEditor();
+
+                var button = new Button
+                {
+                    Content = stringEditor?.ButtonText,
+                    Height = 50,
+                    Width = 100,
+                    Margin = new Thickness(5)
+                };
+
+                button.Click += (s, e) =>
+                {
+                    var text = inputTextBox.Text;
+                    var result = stringEditor?.Function.Invoke(text);
+                    outputTextBox.Text = result;
+                };
+
+                ButtonsPanel.Children.Add(button);
+            }
+            catch
+            {
+                /* Ignore non-clr dlls */
+            }
+
+        }
+
+    }
+
 }

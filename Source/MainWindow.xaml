@@ -7,6 +7,19 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <WrapPanel Grid.Row="0" Grid.ColumnSpan="2" Name="ButtonsPanel"></WrapPanel>
+
+        <TextBox Grid.Row="1" Grid.Column="0" x:Name="inputTextBox" FontSize="40"></TextBox>
+        <TextBox Grid.Row="1" Grid.Column="1" x:Name="outputTextBox" FontSize="40"></TextBox>
     </Grid>
 </Window>

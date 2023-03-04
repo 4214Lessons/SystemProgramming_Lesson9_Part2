@@ -7,4 +7,10 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="AdapterDll">
+      <HintPath>..\..\..\..\Desktop\AdapterDll.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
