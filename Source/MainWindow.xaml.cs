@@ -38,11 +38,11 @@ public partial class MainWindow : Window
 
                 var module = types.FirstOrDefault(type => typeof(IFunctionModule).IsAssignableFrom(type));
 
-                if (module == null) 
-                    return;
+                if (module is null)
+                    continue;
 
                 var moduleObject = Activator.CreateInstance(module) as IFunctionModule;
-                
+
                 var stringEditor = moduleObject?.GetStringEditor();
 
                 var button = new Button
